@@ -1,0 +1,15 @@
+# Ignore Terraform files
+k8s-provision/.terraform/**
+k8s-provision/terraform.tfstate
+k8s-provision/terraform.tfstate.backup
+k8s-provision/terraform.tfvars
+
+# Ignore ca files
+k8s-provision/certs/*.json
+k8s-provision/certs/*.pem
+k8s-provision/certs/*.csr
+k8s-provision/certs/*.kubeconfig
+k8s-provision/certs/*.yaml
+
+# Ignore venv
+workers/venv
