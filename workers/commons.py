@@ -53,8 +53,8 @@ def substract_lists(lista,listb):
 # export list matrix to CSV file
 def write_csv(M,
                file='lists.csv', post='',pre='', delimiter=',',
-               newline='\n', replace_from=',', replace_to=';'):
-    with open(file, 'w', newline='\n') as cfile:
+               newline='\n', replace_from=',', replace_to=';', mode='w'):
+    with open(file, mode, newline='\n') as cfile:
         if M is not None:
             for row in M:
                 if type(row) is not list:
