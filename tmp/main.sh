@@ -16,7 +16,7 @@ do
 done
 
 echo -e "\nWait for 35 seconds..."
-sleep 35
+sleep 80
 
 pkill kubectl
 

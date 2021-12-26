@@ -12,4 +12,7 @@ k8s-provision/certs/*.kubeconfig
 k8s-provision/certs/*.yaml
 
 # Ignore venv
-workers/venv
+worker-app/venv
+
+# Ignore data files
+worker-app/data/*
