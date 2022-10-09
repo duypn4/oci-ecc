@@ -1,0 +1,167 @@
+#!/bin/bash
+
+# GLOBAL ARGUMENTS
+data_folder="data/"
+total_machine=7
+code_parameter=3
+step_save=10
+time_sleep=0
+run_times=4
+
+# UTILITY FUNCTIONS
+setup_experiment () {
+    local experiment="EXP_SC${shifted_cyclic}_RT${run_time}_MD${machine_dead}."
+
+    local data_file="${data_folder}input-matrix.txt"
+    local task_file="${data_folder}${experiment}output-tasks.txt"
+    status_file="${data_folder}${experiment}output-status.txt"
+    local time_file0="${data_folder}${experiment}output-time.txt"
+    local log_file="${data_folder}${experiment}output-log.txt"
+
+    arguments="--total_machine ${total_machine} --code_parameter ${code_parameter} --shifted_cyclic ${shifted_cyclic} --step_save ${step_save} --time_sleep ${time_sleep} --data_file ${data_file} --task_file ${task_file} --status_file ${status_file} --time_file ${time_file0} --log_file ${log_file}"
+
+    echo "EXPERIMENT: ${experiment} ................."
+}
+
+get_workers () {
+    workers=( $(cat workers) )
+
+    echo "This test is run on following workers."
+    echo "--------------------------------------"
+    for i in $(seq 1 ${total_machine})
+    do
+        j=$((i-1))
+        echo "Name: ${workers[j]} -- ID: ${i}"
+    done
+}
+
+wait_worker_completed () {
+    while true
+    do
+        echo "Getting logs..."
+
+        sleep 1
+        local count_machine=0
+        
+        for worker in ${workers[@]}
+        do
+            status=$(parallel-ssh -H ${worker} -i "cat ${status_file} 2>/dev/null" | sed -n '2 p')
+            if [ "${status}" != "" ]
+            then
+                if [ "${status%,*}" -gt "0" ]
+                then
+                    echo "${worker} did: ${status}"
+                    count_machine=$((count_machine+1))
+                fi
+            fi
+        done
+
+        if [ "${count_machine}" -eq "${#workers[@]}" ]
+        then
+            break
+        fi
+    done
+}
+
+run_all_tasks () {
+    echo "Run tasks on all workers..."
+
+    i=0
+    for worker in ${workers[@]}
+    do
+        i=$((i+1))
+        if [ "$1" = "" ]
+        then
+            parallel-ssh -H ${worker} -i "python3 main.py ${arguments} --machine_id ${i} >/dev/null 2>&1 &"
+        else
+            parallel-ssh -H ${worker} -i "python3 main.py ${arguments} --machine_id ${i} --machine_dead ${machine_dead} >/dev/null 2>&1 &"
+        fi
+    done
+}
+
+stop_all_tasks () {
+    echo "Stop tasks on all workers..."
+
+    parallel-ssh -h workers "pkill python3"
+}
+
+compute_time0() {
+    exe_time=0
+
+    for worker in ${workers[@]}
+    do
+        local experiment="EXP_SC${shifted_cyclic}_RT0_MD0."
+        local time_file0="${data_folder}${experiment}output-time.txt"
+
+        local exe_time_worker=$(parallel-ssh -H ${worker} -i "cat ${time_file0}" | sed -n '2 p')
+
+        if [ "1" -eq "$(echo "${exe_time_worker%,*} > ${exe_time}" | bc)" ]
+        then
+            exe_time="${exe_time_worker%,*}"
+        fi
+    done
+
+    echo "Run time without killing: ${exe_time}s."
+}
+
+# CLEAR CONSOLE
+clear
+
+# RESET ALL EXPERIMENTS
+parallel-ssh -h workers "pkill python3" >/dev/null 2>&1
+parallel-ssh -h workers "rm -r data/EXP_*" >/dev/null 2>&1
+
+# START EXPERIMENTS
+for shifted_cyclic in {0..1}
+do
+    echo "Step 0"
+    machine_dead=0
+    for run_time in $(seq 0 ${run_times})
+    do
+        if [ "${run_time}" -eq "0" ]
+        then
+            echo -e "\nCASE RT0: No machine is killed. Just to record the maximum run time."
+            echo "Step 1"
+            setup_experiment
+            get_workers
+            echo "Step 2"
+            run_all_tasks
+            wait_worker_completed
+            echo "Step 3"
+            compute_time0
+            echo "Step 4"
+        else
+            if [ "${run_time}" -lt "${run_times}" ]
+            then
+                echo -e "\nCASE RT${run_time}: Start to kill the machine at l${run_time}."
+
+                for machine_dead in $(seq 1 ${total_machine})
+                do
+                    setup_experiment
+                    get_workers
+		    start_time_master=`date +%s`
+                    run_all_tasks
+
+                    if [ "1" -eq "$(echo "${exe_time} > 0" | bc)" ]
+                    then
+                        sleep_time="$(echo "${exe_time}*${run_time}/${run_times}" | bc)"
+
+                        echo "wait ${sleep_time}s before kill the machine..."
+                        sleep ${sleep_time}
+                        stop_all_tasks
+                        workers=( ${workers[@]/${workers[$((machine_dead-1))]}} )
+
+                        run_all_tasks "${machine_dead}"
+                    fi
+                    
+                    wait_worker_completed
+	            end_time_master=`date +%s`
+		    exe_time_master=$((end_time_master-start_time_master))
+
+                    experiment_name="EXP_SC${shifted_cyclic}_RT${run_time}_MD${machine_dead}."
+		    echo ${exe_time_master} > data/${experiment_name}totaltime.txt
+                done
+            fi
+        fi
+    done
+done

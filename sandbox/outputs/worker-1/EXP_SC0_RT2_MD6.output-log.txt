@@ -1,0 +1,30 @@
+# Machine ID: 1
+# Total machines: 7
+# Data file: data/input-matrix.txt
+Running...,
+Tasks done:,
+
+Tasks remain:,
+0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88
+Task 9 completed after time of 13.618966341018677.,
+Task 19 completed after time of 21.355010986328125.,
+Task 29 completed after time of 29.065035820007324.,
+Task 39 completed after time of 36.78191137313843.,
+# Machine ID: 1
+# Total machines: 7
+# Data file: data/input-matrix.txt
+Running...,
+Tasks done:,
+9,19,29,39
+Tasks remain:,
+0,1,2,3,4,5,6,7,8,10,11,12,13,14,15,16,17,18,20,21,22,23,24,25,26,27,28,30,31,32,33,34,35,36,37,38,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88
+Task 10 completed after time of 13.808398962020874.,
+Task 21 completed after time of 21.611223936080933.,
+Task 32 completed after time of 29.40829372406006.,
+Task 43 completed after time of 37.1860032081604.,
+Task 53 completed after time of 44.98443102836609.,
+Task 63 completed after time of 52.79906153678894.,
+Task 73 completed after time of 60.59436798095703.,
+Task 83 completed after time of 68.68625998497009.,
+Execution time: ,
+72.6180579662323,

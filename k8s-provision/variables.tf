@@ -2,10 +2,13 @@
 variable "tenancy_id" {
     type = string
 }
+variable "root_compartment_id" {
+    type = string
+}
 variable "user_id" {
     type = string
 }
-variable "sandbox_id" {
+variable "compartment_name" {
     type = string
 }
 variable "api_key" {

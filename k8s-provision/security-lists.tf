@@ -1,5 +1,5 @@
 resource "oci_core_security_list" "public-security-list" {
-    compartment_id = var.sandbox_id
+    compartment_id = oci_identity_compartment.compartment.id
     vcn_id = module.vcn.vcn_id
     display_name = "k8s-public-sl"
 

@@ -1,5 +1,5 @@
 resource "oci_core_subnet" "public-subnet" {
-    compartment_id = var.sandbox_id
+    compartment_id = oci_identity_compartment.compartment.id
     vcn_id = module.vcn.vcn_id
     cidr_block = "10.0.1.0/24"
     availability_domain = data.oci_identity_availability_domains.ads.availability_domains[0].name

@@ -1,0 +1,14 @@
+# Machine ID: 3
+# Total machines: 7
+# Data file: data/input-matrix.txt
+Running...,
+Tasks done:,
+
+Tasks remain:,
+60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148
+Task 69 completed after time of 13.762468338012695.,
+Task 79 completed after time of 21.61706781387329.,
+Task 89 completed after time of 29.536948442459106.,
+Task 99 completed after time of 37.40503287315369.,
+Task 109 completed after time of 45.23675060272217.,
+Task 119 completed after time of 53.13131880760193.,

@@ -3,7 +3,7 @@ data "oci_identity_availability_domains" "ads" {
 }
 
 data "oci_core_images" "ubuntu" {
-    compartment_id = var.sandbox_id
+    compartment_id = oci_identity_compartment.compartment.id
     operating_system = var.os_name
     operating_system_version = var.os_version
     sort_by = "TIMECREATED"

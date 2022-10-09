@@ -1,0 +1,32 @@
+# Machine ID: 7
+# Total machines: 7
+# Data file: data/input-matrix.txt
+Running...,
+Tasks done:,
+
+Tasks remain:,
+180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58
+Task 189 completed after time of 13.47534728050232.,
+Task 199 completed after time of 21.158318281173706.,
+Task 209 completed after time of 28.813417434692383.,
+Task 9 completed after time of 36.453617811203.,
+Task 19 completed after time of 44.17545437812805.,
+Task 29 completed after time of 51.84788990020752.,
+# Machine ID: 6
+# Total machines: 7
+# Data file: data/input-matrix.txt
+Running...,
+Tasks done:,
+189,199,209,9,19,29
+Tasks remain:,
+120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,190,191,192,193,194,195,196,197,198,200,201,202,203,204,205,206,207,208
+Task 129 completed after time of 13.580432176589966.,
+Task 139 completed after time of 21.340640783309937.,
+Task 149 completed after time of 29.078807592391968.,
+Task 159 completed after time of 36.796565532684326.,
+Task 169 completed after time of 44.65343737602234.,
+Task 179 completed after time of 52.36702108383179.,
+Task 190 completed after time of 60.07060742378235.,
+Task 201 completed after time of 67.78812336921692.,
+Execution time: ,
+73.20353078842163,

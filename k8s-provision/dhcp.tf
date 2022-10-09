@@ -1,5 +1,5 @@
 resource "oci_core_dhcp_options" "dhcp-options"{
-    compartment_id = var.sandbox_id
+    compartment_id = oci_identity_compartment.compartment.id
     vcn_id = module.vcn.vcn_id
     options {
         type = "DomainNameServer"

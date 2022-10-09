@@ -473,10 +473,10 @@ EOF
 
 # host entries
 cat <<EOF | sudo tee -a /etc/hosts
-10.0.1.5 ip-10-0-1-20
-10.0.1.148 ip-10-0-1-21
-10.0.1.6 ip-10-0-1-22
-10.0.1.197 ip-10-0-1-22
+10.0.1.5 worker-0
+10.0.1.148 worker-1
+10.0.1.6 worker-2
+10.0.1.197 worker-3
 EOF
 
 # kubelet
@@ -496,7 +496,7 @@ ExecStart=/usr/local/bin/kubelet \\
   --kubeconfig=/var/lib/kubelet/kubeconfig \\
   --network-plugin=cni \\
   --register-node=true \\
-  --hostname-override=ip-10-0-1-21 \\
+  --hostname-override=ip-10-0-1-23 \\
   --v=2
 Restart=on-failure
 RestartSec=5
