@@ -1,0 +1,118 @@
+1. Save duy-ssh to C:/Users/Hoang Dau/.ssh
+
+2. Access servers using their IPs
+-worker 1: ssh -i .ssh\duy-ssh ubuntu@168.138.30.174
+-main server: ssh -i .ssh\duy-ssh ubuntu@168.138.0.232
+
+3. Install ansible and parallel
+- install ansible: sudo apt-get install pip && pip install ansible
+- install parallel-ssh: sudo apt-get install pssh
+
+4. Define ansible and parallel-ssh inventories:
+- parallel-ssh: modify "workers" file with all machine private ips and hostnames
+    format: <hostname>@<private-ip>
+
+- ansible:
+    mkdir /etc/ansible
+    create file "hosts" inside /etc/ansible with all machine private ips
+
+5. Deploy apps to all workers
+- run command "deploy-apps.sh" file: bash deploy-apps.sh
+
+3. At server, go to worker-apps/ to modify main.py 
+-Chạy tests trên workers: bash main-pssh.sh
+-Deploy code bị thay đổi lên workers: bash deploy-apps.sh
+-Lấy tất cả file outputs trên workers xuống master: bash get-outputs.sh
+-Tạo matrix file trên workers: ansible all -m shell -a "rm data/input-matrix.txt && python3 preprocess/generate_matrix.py --rows <row number> --cols <column number>"
+-Xem process trên workers: parallel-ssh -h workers -i "ps"
+
+4. At worker
+-remove current output files before running the test: type "rm data/out*"
+-test run main.py:
+Change the machine_id, machine_dead, shifted_cyclic to test.
+a. Start with machine_dead = 0
+python3 main.py ${arguments} --machine_id 3 --machine_dead 0 --shifted_cyclic 1 --verbose True  
+b. Kill the process (Ctrl+C) in the middle
+c. cat data/output-tasks.txt
+to see the done tasks 
+d. Resume the computation and add machine_dead
+python3 main.py ${arguments} --machine_id 3 --machine_dead 2 --shifted_cyclic 1 --verbose True
+
+Have to set up the "arguments" first before running main.py: 
+ubuntu@worker-0:~$ data_folder="data/"
+ubuntu@worker-0:~$ echo $data_folder
+data/
+ubuntu@worker-0:~$ total_machine=7
+ubuntu@worker-0:~$ code_parameter=3
+ubuntu@worker-0:~$ step_save=1
+ubuntu@worker-0:~$ time_sleep=0
+ubuntu@worker-0:~$ run_times=4
+ubuntu@worker-0:~$ data_file="${data_folder}input-matrix.txt"
+ubuntu@worker-0:~$ task_file="${data_folder}${experiment}output-tasks.txt"
+ubuntu@worker-0:~$ status_file="${data_folder}${experiment}output-status.txt"
+ubuntu@worker-0:~$ time_file0="${data_folder}${experiment}output-time.txt"
+ubuntu@worker-0:~$ log_file="${data_folder}${experiment}output-log.txt"
+ubuntu@worker-0:~$ arguments="--total_machine ${total_machine} --code_parameter ${code_parameter} 
+--step_save ${step_save} --time_sleep ${time_sleep} --data_file ${data_file} --task_file ${task_file} --status_file ${status_file} 
+--time_file ${time_file0} --log_file ${log_file}"
+
+($experiment has no value here and is "", but has value if called from the bash script)
+
+Generation of input matrix:
+Can also generate the matrix at worker by going to preprocess/ and type
+python3 generate_matrix.py --rows 5000 --cols 2000 --file ~/data/inpu
+t-matrix.txt
+
+MY PLAN TO TEST
+1. Make sure the cyclic case is correct
+-assigned tasks: DONE
+-running time when no machine is killed: DONE
+-running time when one machine is killed: DONE 
+
+2. Make sure the shifted cyclic case is correct
+-assigned tasks: DONE
+-running time when no machine is killed (should be the same as above): DONE
+-running time when one machine is killed (should be faster than the above especially when closer to the end): DONE
+
+3. Add & test the zero-waste case
+
+NOTES
+-reading time (A, X) is quite large (6 sec once, 12 sec if one machine is killed and the matrix is read twice)
+-some time the cyclic one can run faster if the completed tasks accidentally belong to the intersection,
+while not covered by the shifted cyclic tasks set, but I expect that when the worker is closer to the 
+finish time, the shifted one will be better
+-clearly, the zero-waste is always the best
+
+
+
+Installation
+-pip: sudo apt install python3-pip
+-matplotlib: python3 -m pip install -U matplotlib
+
+Example of updating indices
+IP1: 1 
+IP2: 2 X
+IP3: 3
+IP4: 4
+IP5: 5
+IP6: 6
+IP7: 7
+
+machine_dead = 2
+{IP1, IP3, IP4, IP5, IP6, IP7}
+{0, 1, 2, 3, 4, 5}
+{1, 3, 4, 5, 6, 7}
+
+i: 1 -> 7
+if i < machine_dead: workers[i-1] -> i
+if i > machine_dead: workers[i-2] -> i
+
+i = 1: workers[1-1] -> 1 (machine_id)
+i = 3: workers[3-2] -> 3
+i = 4: workers[4-2] -> 4
+
+3. Setup environment automatically
+- run: terraform apply
+
+4. After working on this app, you can destroy all resources
+- run: terraform destroy
