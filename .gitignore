@@ -5,11 +5,7 @@
 **/terraform.tfvars
 
 # Ignore ca files
-**/certs/**
-**/certs/**
-**/certs/**
-**/certs/**
-**/certs/**
+**/certs
 
 # Ignore venv
 worker-app/venv
